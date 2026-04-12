@@ -1,0 +1,16 @@
+name: MegaLinter
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  megalinter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oxsecurity/megalinter/flavors/cupcake@v8
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
