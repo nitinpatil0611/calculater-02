@@ -1,3 +1,5 @@
-# calculater-02
-thise is my first repository
-outher = nitin khurde
+# Calculator-02
+
+This is my first repository.
+
+**Author:** Nitin Khurde
