@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Sale Order Form View -->
+    <record id="view_order_form_inherit_approval" model="ir.ui.view">
+        <field name="name">sale.order.form.approval</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Replace Confirm Button -->
+            <xpath expr="//button[@name='action_confirm'][1]" position="attributes">
+                <attribute name="invisible">approval_state != 'approved'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
+                <attribute name="invisible">approval_state != 'approved'</attribute>
+            </xpath>
+
+            <!-- Add Get Approval Button -->
+            <xpath expr="//header" position="inside">
+                <button name="%(action_sale_approval_wizard)d" string="Get Approval" type="action" class="btn-primary" 
+                        invisible="state not in ['draft', 'sent'] or approval_state in ['pending', 'approved']"/>
+                <button name="action_approve" string="Approve" type="object" class="btn-success" 
+                        invisible="approval_state != 'pending' or approver_id != uid"/>
+                <button name="action_reject" string="Reject" type="object" class="btn-danger" 
+                        invisible="approval_state != 'pending' or approver_id != uid"/>
+            </xpath>
+
+            <!-- Add Approval Info Fields -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="approver_id" readonly="1" invisible="not approver_id"/>
+                <field name="approval_state" readonly="1" invisible="not approval_state"/>
+                <field name="approved_by_id" readonly="1" invisible="not approved_by_id"/>
+                <field name="approval_date" readonly="1" invisible="not approval_date"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Sale Order Tree View -->
+    <record id="view_quotation_tree_inherit_approval" model="ir.ui.view">
+        <field name="name">sale.order.tree.approval</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="approver_id" string="Selected Approver"/>
+                <field name="approved_by_id" string="Approved/Rejected By"/>
+                <field name="approval_date" string="Approval Date/Time"/>
+                <field name="approval_state" string="Approval Status" widget="badge" 
+                       decoration-info="approval_state == 'pending'" 
+                       decoration-success="approval_state == 'approved'" 
+                       decoration-danger="approval_state == 'rejected'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
